@@ -14,6 +14,13 @@ public class ProductAccess {
             for (Product p : products) {
                 System.out.println(p.getProductCode() + ": " + p.getProductDescription());
             }
+
+            Product p = productDao.getProductByCode("S10_1678");
+            if(p != null) {
+                System.out.println("Product matching S10_1678: " + p.getProductName());
+            }else{
+                System.out.println("No product found matching S10_1678");
+            }
         }catch(SQLException e){
             System.out.println("Connection could not be established at this time. Try again later.");
         }

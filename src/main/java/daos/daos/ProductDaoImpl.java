@@ -95,4 +95,27 @@ public class ProductDaoImpl {
         }
         return products;
     }
+
+    public Product getProductByCode(String prodCode) throws SQLException{
+        Connection conn = getConnection();
+        if(conn == null){
+            throw new SQLException("getProductByCode(): Could not establish connection to database.");
+        }
+
+        Product product = null;
+        try(PreparedStatement ps = conn.prepareStatement("SELECT * FROM products WHERE productCode = ?")) {
+            ps.setString(1, prodCode);
+            try(ResultSet rs = ps.executeQuery()) {
+                // Loop through the result set
+                if(rs.next()){
+                    product = mapProductRow(rs);
+                }
+            }catch(SQLException e){
+                System.out.println("An issue occurred when running the query or processing the resultset: " + e.getMessage());
+            }
+        }catch(SQLException e){
+            System.out.println("The SQL query could not be prepared: " + e.getMessage());
+        }
+        return product;
+    }
 }
