@@ -1,4 +1,4 @@
-package basic_jdbc.dtos;
+package daos.entities;
 
 import java.util.Objects;
 
