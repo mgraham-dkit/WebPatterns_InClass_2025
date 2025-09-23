@@ -44,17 +44,7 @@ public class ProductDaoImpl {
             try(ResultSet rs = ps.executeQuery()) {
                 // Loop through the result set
                 while(rs.next()){
-                    Product product = new Product(
-                            rs.getString("productCode"),
-                            rs.getString("productName"),
-                            rs.getString("productLine"),
-                            rs.getString("productScale"),
-                            rs.getString("productVendor"),
-                            rs.getString("productDescription"),
-                            rs.getInt("quantityInStock"),
-                            rs.getDouble("buyPrice"),
-                            rs.getDouble("MSRP")
-                    );
+                    Product product = mapProductRow(rs);
                     products.add(product);
                 }
             }catch(SQLException e){
@@ -64,6 +54,21 @@ public class ProductDaoImpl {
             System.out.println("The SQL query could not be prepared: " + e.getMessage());
         }
         return products;
+    }
+
+    private static Product mapProductRow(ResultSet rs) throws SQLException {
+        Product product = new Product(
+                rs.getString("productCode"),
+                rs.getString("productName"),
+                rs.getString("productLine"),
+                rs.getString("productScale"),
+                rs.getString("productVendor"),
+                rs.getString("productDescription"),
+                rs.getInt("quantityInStock"),
+                rs.getDouble("buyPrice"),
+                rs.getDouble("MSRP")
+        );
+        return product;
     }
 
 
@@ -79,17 +84,7 @@ public class ProductDaoImpl {
             try(ResultSet rs = ps.executeQuery()) {
                 // Loop through the result set
                 while(rs.next()){
-                    Product product = new Product(
-                            rs.getString("productCode"),
-                            rs.getString("productName"),
-                            rs.getString("productLine"),
-                            rs.getString("productScale"),
-                            rs.getString("productVendor"),
-                            rs.getString("productDescription"),
-                            rs.getInt("quantityInStock"),
-                            rs.getDouble("buyPrice"),
-                            rs.getDouble("MSRP")
-                    );
+                    Product product = mapProductRow(rs);
                     products.add(product);
                 }
             }catch(SQLException e){
