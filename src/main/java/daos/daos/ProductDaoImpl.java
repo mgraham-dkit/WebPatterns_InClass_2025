@@ -65,4 +65,39 @@ public class ProductDaoImpl {
         }
         return products;
     }
+
+
+    public List<Product> getAllProductsContainingKeyword(String keyword) throws SQLException{
+        Connection conn = getConnection();
+        if(conn == null){
+            throw new SQLException("getAllProductsContainingKeyword(): Could not establish connection to database.");
+        }
+
+        ArrayList<Product> products = new ArrayList<>();
+        try(PreparedStatement ps = conn.prepareStatement("SELECT * FROM products WHERE productDescription LIKE ?")) {
+            ps.setString(1, "%" + keyword + "%");
+            try(ResultSet rs = ps.executeQuery()) {
+                // Loop through the result set
+                while(rs.next()){
+                    Product product = new Product(
+                            rs.getString("productCode"),
+                            rs.getString("productName"),
+                            rs.getString("productLine"),
+                            rs.getString("productScale"),
+                            rs.getString("productVendor"),
+                            rs.getString("productDescription"),
+                            rs.getInt("quantityInStock"),
+                            rs.getDouble("buyPrice"),
+                            rs.getDouble("MSRP")
+                    );
+                    products.add(product);
+                }
+            }catch(SQLException e){
+                System.out.println("An issue occurred when running the query or processing the resultset: " + e.getMessage());
+            }
+        }catch(SQLException e){
+            System.out.println("The SQL query could not be prepared: " + e.getMessage());
+        }
+        return products;
+    }
 }
