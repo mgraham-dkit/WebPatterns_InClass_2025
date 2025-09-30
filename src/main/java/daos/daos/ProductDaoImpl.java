@@ -118,4 +118,30 @@ public class ProductDaoImpl {
         }
         return product;
     }
+
+    public Product deleteProductByCode(String prodCode) throws SQLException{
+        Product removed = getProductByCode(prodCode);
+        if(removed == null){
+            return removed;
+        }
+
+        Connection conn = getConnection();
+        if(conn == null){
+            throw new SQLException("deleteProductByCode(): Could not establish connection to database.");
+        }
+
+        int deletedRows = 0;
+        try(PreparedStatement ps = conn.prepareStatement("DELETE FROM products where productCode = ?")) {
+
+           deletedRows = ps.executeUpdate();
+
+        }catch(SQLException e){
+            System.out.println("The SQL query could not be prepared: " + e.getMessage());
+        }
+        if(deletedRows == 0){
+            removed = null;
+        }
+
+        return removed;
+    }
 }
