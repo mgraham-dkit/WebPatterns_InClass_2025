@@ -1,5 +1,7 @@
 package daos.apps;
 
+import daos.daos.Connector;
+import daos.daos.MySqlConnector;
 import daos.daos.ProductDao;
 import daos.daos.ProductDaoImpl;
 import daos.entities.Product;
@@ -9,7 +11,8 @@ import java.util.List;
 
 public class ProductAccess {
     public static void main(String[] args) {
-        ProductDao productDao = new ProductDaoImpl();
+        Connector mySqlConnector = new MySqlConnector();
+        ProductDao productDao = new ProductDaoImpl(mySqlConnector);
         try {
             List<Product> products = productDao.getAllProductsContainingKeyword("wheel");
             for (Product p : products) {

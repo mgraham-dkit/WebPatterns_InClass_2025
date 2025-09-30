@@ -9,32 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProductDaoImpl implements ProductDao {
-    public Connection getConnection(){
-        Connection conn = null;
+    private Connector connector;
 
-        String driver = "com.mysql.cj.jdbc.Driver";
-        String url = "jdbc:mysql://127.0.0.1:3306/classicmodels";
-        String username = "root";
-        String password = "";
-
-        try {
-            // Load the database driver
-            Class.forName(driver);
-            // Get a connection to the database
-            conn = DriverManager.getConnection(url, username, password);
-        }catch(SQLException e){
-            System.out.println("Connection could not be established - incorrect URL or database not switched on. ");
-            System.out.println("Exception: " + e.getMessage());
-        }catch(ClassNotFoundException e){
-            System.out.println("Driver files have not been loaded. Please check pom driver dependencies details.");
-            System.out.println("Exception: " + e.getMessage());
-        }
-
-        return conn;
+    public ProductDaoImpl(Connector connector){
+        this.connector = connector;
     }
 
     public List<Product> getAllProducts() throws SQLException{
-        Connection conn = getConnection();
+        Connection conn = connector.getConnection();
         if(conn == null){
             throw new SQLException("getAllProducts(): Could not establish connection to database.");
         }
@@ -73,7 +55,7 @@ public class ProductDaoImpl implements ProductDao {
 
 
     public List<Product> getAllProductsContainingKeyword(String keyword) throws SQLException{
-        Connection conn = getConnection();
+        Connection conn = connector.getConnection();
         if(conn == null){
             throw new SQLException("getAllProductsContainingKeyword(): Could not establish connection to database.");
         }
@@ -97,7 +79,7 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     public Product getProductByCode(String prodCode) throws SQLException{
-        Connection conn = getConnection();
+        Connection conn = connector.getConnection();
         if(conn == null){
             throw new SQLException("getProductByCode(): Could not establish connection to database.");
         }
@@ -125,7 +107,7 @@ public class ProductDaoImpl implements ProductDao {
             return removed;
         }
 
-        Connection conn = getConnection();
+        Connection conn = connector.getConnection();
         if(conn == null){
             throw new SQLException("deleteProductByCode(): Could not establish connection to database.");
         }
