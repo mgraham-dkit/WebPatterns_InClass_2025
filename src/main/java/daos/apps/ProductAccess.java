@@ -1,5 +1,6 @@
 package daos.apps;
 
+import daos.daos.ProductDao;
 import daos.daos.ProductDaoImpl;
 import daos.entities.Product;
 
@@ -8,7 +9,7 @@ import java.util.List;
 
 public class ProductAccess {
     public static void main(String[] args) {
-        ProductDaoImpl productDao = new ProductDaoImpl();
+        ProductDao productDao = new ProductDaoImpl();
         try {
             List<Product> products = productDao.getAllProductsContainingKeyword("wheel");
             for (Product p : products) {

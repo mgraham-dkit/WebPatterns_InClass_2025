@@ -8,7 +8,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductDaoImpl {
+public class ProductDaoImpl implements ProductDao {
     public Connection getConnection(){
         Connection conn = null;
 
