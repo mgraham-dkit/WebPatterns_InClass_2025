@@ -28,4 +28,8 @@ public class MySqlConnector implements Connector{
 
         return conn;
     }
+
+    public void freeConnection(){
+        System.out.println("Hello!!!");
+    }
 }

@@ -25,6 +25,13 @@ public class ProductAccess {
             }else{
                 System.out.println("No product found matching S10_1678");
             }
+
+            Product p1 = productDao.getProductByCode("S10_1010");
+            if(p != null) {
+                System.out.println("Product matching S10_1678: " + p.getProductName());
+            }else{
+                System.out.println("No product found matching S10_1678");
+            }
         }catch(SQLException e){
             System.out.println("Connection could not be established at this time. Try again later.");
         }
