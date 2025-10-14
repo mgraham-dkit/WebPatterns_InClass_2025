@@ -5,10 +5,12 @@ import daos.daos.MySqlConnector;
 import daos.daos.ProductDao;
 import daos.daos.ProductDaoImpl;
 import daos.entities.Product;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.SQLException;
 import java.util.List;
 
+@Slf4j
 public class ProductAccess {
     public static void main(String[] args) {
         Connector mySqlConnector = new MySqlConnector();
@@ -32,8 +34,9 @@ public class ProductAccess {
             }else{
                 System.out.println("No product found matching S10_1678");
             }
+            mySqlConnector.freeConnection();
         }catch(SQLException e){
-            System.out.println("Connection could not be established at this time. Try again later.");
+            log.error("Connection could not be established at this time. Try again later. \nException: {}", e.getMessage());
         }
     }
 }
