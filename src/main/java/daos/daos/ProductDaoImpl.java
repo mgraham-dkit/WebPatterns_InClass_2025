@@ -42,18 +42,17 @@ public class ProductDaoImpl implements ProductDao {
     }
 
     private static Product mapProductRow(ResultSet rs) throws SQLException {
-        Product product = new Product(
-                rs.getString("productCode"),
-                rs.getString("productName"),
-                rs.getString("productLine"),
-                rs.getString("productScale"),
-                rs.getString("productVendor"),
-                rs.getString("productDescription"),
-                rs.getInt("quantityInStock"),
-                rs.getDouble("buyPrice"),
-                rs.getDouble("MSRP")
-        );
-        return product;
+        return Product.builder()
+                .productCode(rs.getString("productCode"))
+                .productName(rs.getString("productName"))
+                .productLine(rs.getString("productLine"))
+                .productScale(rs.getString("productScale"))
+                .productVendor(rs.getString("productVendor"))
+                .productDescription(rs.getString("productDescription"))
+                .quantityInStock(rs.getInt("quantityInStock"))
+                .buyPrice(rs.getDouble("buyPrice"))
+                .msrp(rs.getDouble("MSRP"))
+                .build();
     }
 
 
