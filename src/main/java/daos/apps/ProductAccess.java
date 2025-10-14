@@ -29,10 +29,10 @@ public class ProductAccess {
             }
 
             Product p1 = productDao.getProductByCode("S10_1010");
-            if(p != null) {
-                System.out.println("Product matching S10_1678: " + p.getProductName());
+            if(p1 != null) {
+                System.out.println("Product matching S10_1010: " + p1.getProductName());
             }else{
-                System.out.println("No product found matching S10_1678");
+                System.out.println("No product found matching S10_1010");
             }
             mySqlConnector.freeConnection();
         }catch(SQLException e){
