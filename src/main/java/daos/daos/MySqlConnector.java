@@ -5,8 +5,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class MySqlConnector implements Connector{
+    private Connection conn;
     public Connection getConnection(){
-        Connection conn = null;
+        conn = null;
 
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://127.0.0.1:3306/classicmodels";
@@ -27,5 +28,17 @@ public class MySqlConnector implements Connector{
         }
 
         return conn;
+    }
+
+    public void freeConnection(){
+        if(conn != null){
+            try{
+                conn.close();
+                conn = null;
+            }catch (SQLException e){
+                System.out.println("An exception occurred when attempting to close the " +
+                        "connection to the database");
+            }
+        }
     }
 }
