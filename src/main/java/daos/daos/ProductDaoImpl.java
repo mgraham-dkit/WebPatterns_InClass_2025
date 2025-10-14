@@ -3,11 +3,13 @@ package daos.daos;
 
 
 import daos.entities.Product;
+import lombok.extern.slf4j.Slf4j;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 public class ProductDaoImpl implements ProductDao {
     private Connector connector;
 
@@ -30,10 +32,11 @@ public class ProductDaoImpl implements ProductDao {
                     products.add(product);
                 }
             }catch(SQLException e){
-                System.out.println("An issue occurred when running the query or processing the resultset: " + e.getMessage());
+                log.error("getAllProducts(): An issue occurred when running the query or processing " +
+                        "the resultset. \nException: {}", e.getMessage());
             }
         }catch(SQLException e){
-            System.out.println("The SQL query could not be prepared: " + e.getMessage());
+            log.error("getAllProducts() - The SQL query could not be prepared. \nException: {}", e.getMessage());
         }
         return products;
     }
@@ -70,10 +73,12 @@ public class ProductDaoImpl implements ProductDao {
                     products.add(product);
                 }
             }catch(SQLException e){
-                System.out.println("An issue occurred when running the query or processing the resultset: " + e.getMessage());
+                log.error("getAllProductsContainingKeyword(): An issue occurred when running the query or processing " +
+                                "the resultset. \nException: {}", e.getMessage());
             }
         }catch(SQLException e){
-            System.out.println("The SQL query could not be prepared: " + e.getMessage());
+            log.error("getAllProductsContainingKeyword() - The SQL query could not be prepared. \nException: {}",
+                    e.getMessage());
         }
         return products;
     }
@@ -93,10 +98,12 @@ public class ProductDaoImpl implements ProductDao {
                     product = mapProductRow(rs);
                 }
             }catch(SQLException e){
-                System.out.println("An issue occurred when running the query or processing the resultset: " + e.getMessage());
+                log.error("getProductByCode(): An issue occurred when running the query or processing the resultset. " +
+                                "\nException: {}",
+                        e.getMessage());
             }
         }catch(SQLException e){
-            System.out.println("The SQL query could not be prepared: " + e.getMessage());
+            log.error("getProductByCode() - The SQL query could not be prepared. \nException: {}", e.getMessage());
         }
         return product;
     }
@@ -118,7 +125,7 @@ public class ProductDaoImpl implements ProductDao {
            deletedRows = ps.executeUpdate();
 
         }catch(SQLException e){
-            System.out.println("The SQL query could not be prepared: " + e.getMessage());
+            log.error("deleteProductByCode() - The SQL query could not be prepared. \nException: {}", e.getMessage());
         }
         if(deletedRows == 0){
             removed = null;
