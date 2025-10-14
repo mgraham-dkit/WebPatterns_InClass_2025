@@ -1,12 +1,17 @@
 package daos.daos;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@Slf4j
 public class MySqlConnector implements Connector{
+    private Connection conn;
+
     public Connection getConnection(){
-        Connection conn = null;
+        conn = null;
 
         String driver = "com.mysql.cj.jdbc.Driver";
         String url = "jdbc:mysql://127.0.0.1:3306/classicmodels";
@@ -19,17 +24,26 @@ public class MySqlConnector implements Connector{
             // Get a connection to the database
             conn = DriverManager.getConnection(url, username, password);
         }catch(SQLException e){
-            System.out.println("Connection could not be established - incorrect URL or database not switched on. ");
-            System.out.println("Exception: " + e.getMessage());
+            log.error("Connection could not be established - incorrect URL or database not switched on. \n Exception:" +
+                    " {}", e.getMessage());
         }catch(ClassNotFoundException e){
-            System.out.println("Driver files have not been loaded. Please check pom driver dependencies details.");
-            System.out.println("Exception: " + e.getMessage());
+            log.error("Driver files have not been loaded. Please check pom driver dependencies details. \n Exception:" +
+                    " {}", e.getMessage());
         }
 
         return conn;
     }
 
     public void freeConnection(){
-        System.out.println("Hello!!!");
+        if(conn != null){
+            try{
+                conn.close();
+                conn = null;
+            }catch (SQLException e){
+                log.error("An exception occurred when attempting to close the connection to the database \n " +
+                        "Exception:" +
+                        " {}", e.getMessage());
+            }
+        }
     }
 }
