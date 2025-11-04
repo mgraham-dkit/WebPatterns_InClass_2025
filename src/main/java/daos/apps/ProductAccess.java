@@ -13,7 +13,7 @@ import java.util.List;
 @Slf4j
 public class ProductAccess {
     public static void main(String[] args) {
-        Connector mySqlConnector = new MySqlConnector();
+        Connector mySqlConnector = new MySqlConnector("properties/database.properties");
         ProductDao productDao = new ProductDaoImpl(mySqlConnector);
         try {
             List<Product> products = productDao.getAllProductsContainingKeyword("wheel");
