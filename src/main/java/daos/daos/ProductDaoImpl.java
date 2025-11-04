@@ -34,9 +34,11 @@ public class ProductDaoImpl implements ProductDao {
             }catch(SQLException e){
                 log.error("getAllProducts(): An issue occurred when running the query or processing " +
                         "the resultset. \nException: {}", e.getMessage());
+                throw e;
             }
         }catch(SQLException e){
             log.error("getAllProducts() - The SQL query could not be prepared. \nException: {}", e.getMessage());
+            throw e;
         }
         return products;
     }
@@ -74,10 +76,12 @@ public class ProductDaoImpl implements ProductDao {
             }catch(SQLException e){
                 log.error("getAllProductsContainingKeyword(): An issue occurred when running the query or processing " +
                                 "the resultset. \nException: {}", e.getMessage());
+                throw e;
             }
         }catch(SQLException e){
             log.error("getAllProductsContainingKeyword() - The SQL query could not be prepared. \nException: {}",
                     e.getMessage());
+            throw e;
         }
         return products;
     }
@@ -100,9 +104,11 @@ public class ProductDaoImpl implements ProductDao {
                 log.error("getProductByCode(): An issue occurred when running the query or processing the resultset. " +
                                 "\nException: {}",
                         e.getMessage());
+                throw e;
             }
         }catch(SQLException e){
             log.error("getProductByCode() - The SQL query could not be prepared. \nException: {}", e.getMessage());
+            throw e;
         }
         return product;
     }
@@ -120,16 +126,47 @@ public class ProductDaoImpl implements ProductDao {
 
         int deletedRows = 0;
         try(PreparedStatement ps = conn.prepareStatement("DELETE FROM products where productCode = ?")) {
-
+            ps.setString(1, prodCode);
            deletedRows = ps.executeUpdate();
 
         }catch(SQLException e){
             log.error("deleteProductByCode() - The SQL query could not be prepared. \nException: {}", e.getMessage());
+            throw e;
         }
         if(deletedRows == 0){
             removed = null;
         }
 
         return removed;
+    }
+
+    public boolean addProduct(Product p) throws SQLException{
+        if(p == null){
+            throw new IllegalArgumentException("Cannot add a null Product to database");
+        }
+        Connection conn = connector.getConnection();
+        if(conn == null){
+            throw new SQLException("addProduct(): Could not establish connection to database.");
+        }
+
+        int addedRows = 0;
+        try(PreparedStatement ps = conn.prepareStatement("INSERT INTO products VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")) {
+            ps.setString(1, p.getProductCode());
+            ps.setString(2, p.getProductName());
+            ps.setString(3, p.getProductLine());
+            ps.setString(4, p.getProductScale());
+            ps.setString(5, p.getProductVendor());
+            ps.setString(6, p.getProductDescription());
+            ps.setInt(7, p.getQuantityInStock());
+            ps.setDouble(8, p.getBuyPrice());
+            ps.setDouble(9, p.getMsrp());
+
+            addedRows = ps.executeUpdate();
+
+        }catch(SQLException e){
+            log.error("addProduct() - The SQL query could not be prepared. \nException: {}", e.getMessage());
+            throw e;
+        }
+        return addedRows == 1;
     }
 }

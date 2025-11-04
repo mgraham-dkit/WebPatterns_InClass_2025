@@ -6,6 +6,7 @@ import daos.daos.ProductDao;
 import daos.daos.ProductDaoImpl;
 import daos.entities.Product;
 import lombok.extern.slf4j.Slf4j;
+import services.ProductService;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -34,9 +35,13 @@ public class ProductAccess {
             }else{
                 System.out.println("No product found matching S10_1010");
             }
+
+            ProductService prodService = new ProductService(productDao);
+            List<Product> deleted = prodService.deleteProductsByKeyword("the");
+            System.out.println("Deleted products: " + deleted);
             mySqlConnector.freeConnection();
         }catch(SQLException e){
-            log.error("Connection could not be established at this time. Try again later. \nException: {}", e.getMessage());
+            log.error("Database exception occurred. \nException: {}", e.getMessage());
         }
     }
 }

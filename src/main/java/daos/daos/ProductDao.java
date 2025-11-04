@@ -10,4 +10,5 @@ public interface ProductDao {
     public List<Product> getAllProductsContainingKeyword(String keyword) throws SQLException;
     public Product getProductByCode(String prodCode) throws SQLException;
     public Product deleteProductByCode(String prodCode) throws SQLException;
+    public boolean addProduct(Product p) throws SQLException;
 }
