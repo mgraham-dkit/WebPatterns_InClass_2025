@@ -30,17 +30,41 @@ public class ProductAccess {
 
         return productService;
     }
+
     public static void main(String[] args) {
         productService = configureService("properties/database.properties");
-        try{
-            getProductsByKeyword();
-            getProductByCode();
-            deleteProductsByKeyword();
-        }catch(SQLException e){
-            log.error("Database exception occurred. \nException: {}", e.getMessage());
+
+        boolean keepRunning = true;
+
+        while(keepRunning) {
+            System.out.println("Please choose from the following options: ");
+            displayMenu();
+            String choice = input.nextLine();
+            try{
+                switch(choice) {
+                    case "-1" -> {
+                        System.out.println("Now terminating...");
+                        keepRunning = false;
+                    }
+                    case "1" -> getProductsByKeyword();
+                    case "2" -> getProductByCode();
+                    case "3" -> deleteProductsByKeyword();
+                    default -> System.out.println("Not a valid choice, please try again.");
+                }
+            } catch (SQLException e) {
+                log.error("Database exception occurred. \nException: {}", e.getMessage());
+            }
         }
         // Shut down connection in use
         productService.shutdownService();
+        System.out.println("Connection terminated. Goodbye.");
+    }
+
+    private static void displayMenu(){
+        System.out.println("1) Display all products matching specific keyword");
+        System.out.println("2) Display the product matching specific product code");
+        System.out.println("3) Delete all products matching specific keyword");
+        System.out.println("-1) Exit program");
     }
 
     private static void deleteProductsByKeyword() throws SQLException {
