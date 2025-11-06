@@ -19,6 +19,11 @@ public class ProductService {
         return productDao.getAllProducts();
     }
 
+    public Product getProductByCode(String prodCode) throws SQLException{
+        log.info("Product retrieval: {}", prodCode);
+        return productDao.getProductByCode(prodCode);
+    }
+
     public List<Product> getProductsByKeyword(String keyword) throws SQLException {
         if(keyword == null){
             throw new IllegalArgumentException("Cannot search for null keyword");
@@ -53,7 +58,7 @@ public class ProductService {
             }
 
             throw new SQLException("Failed to delete product with code " + currentProduct.getProductCode() + ". " +
-                    "Action rolled back - no products were deleted");
+                    "Action rolled back - no products containing keyword " + keyword + " were deleted");
 
         }
 
