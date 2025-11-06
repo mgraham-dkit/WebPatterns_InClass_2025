@@ -17,6 +17,10 @@ public class ProductDaoImpl implements ProductDao {
         this.connector = connector;
     }
 
+    public void closeConnection(){
+        connector.freeConnection();
+    }
+
     public List<Product> getAllProducts() throws SQLException{
         Connection conn = connector.getConnection();
         if(conn == null){

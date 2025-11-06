@@ -39,7 +39,8 @@ public class ProductAccess {
         }catch(SQLException e){
             log.error("Database exception occurred. \nException: {}", e.getMessage());
         }
-        //productService.shutdownService();
+        // Shut down connection in use
+        productService.shutdownService();
     }
 
     private static void deleteProductsByKeyword() throws SQLException {

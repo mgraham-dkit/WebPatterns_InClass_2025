@@ -15,6 +15,10 @@ public class ProductService {
         this.productDao = dao;
     }
 
+    public void shutdownService(){
+        productDao.closeConnection();
+    }
+
     public List<Product> getAllProducts() throws SQLException {
         return productDao.getAllProducts();
     }
