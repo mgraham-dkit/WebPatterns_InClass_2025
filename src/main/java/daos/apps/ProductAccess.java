@@ -14,6 +14,9 @@ import java.util.Scanner;
 
 @Slf4j
 public class ProductAccess {
+    private static ProductService productService;
+    private static Scanner input = new Scanner(System.in);
+
     /**
      * Configure a ProductService object for use by this interface
      *
@@ -28,61 +31,75 @@ public class ProductAccess {
         return productService;
     }
     public static void main(String[] args) {
-        ProductService productService = configureService("properties/database.properties");
-        Scanner scanner = new Scanner(System.in);
+        productService = configureService("properties/database.properties");
         try{
-            System.out.print("Please enter keyword: ");
-            String keyword = scanner.nextLine();
+            getProductsByKeyword();
+            getProductByCode();
+            deleteProductsByKeyword();
+        }catch(SQLException e){
+            log.error("Database exception occurred. \nException: {}", e.getMessage());
+        }
+        //productService.shutdownService();
+    }
 
-            try {
-                List<Product> products = productService.getProductsByKeyword(keyword);
-                System.out.println("-------------------------------");
+    private static void deleteProductsByKeyword() throws SQLException {
+        System.out.print("Please enter keyword to delete products for: ");
+        String keyword = input.nextLine();
+        System.out.println();
+
+        try {
+            List<Product> deleted = productService.deleteProductsByKeyword(keyword);
+            if(deleted.isEmpty()){
+                System.out.println("No products were deleted for keyword \"" + keyword + "\".");
+            }else{
+                System.out.println("Deleted products: " + deleted);
+            }
+
+        }catch(SQLException e){
+            System.out.println("A database error occurred. Could not delete products containing specified keyword: " + keyword);
+            throw e;
+        }
+    }
+
+    private static void getProductByCode() throws SQLException {
+        System.out.print("Please enter product code: ");
+        String prodCode = input.nextLine();
+        System.out.println();
+
+        try {
+            Product p = productService.getProductByCode(prodCode);
+            if (p != null) {
+                System.out.println("Product matching " + prodCode + ": " + p.getProductName());
+            } else {
+                System.out.println("No product found matching " + prodCode);
+            }
+        }catch(SQLException e) {
+            System.out.println("Cannot carry out product retrieval. An error occurred when retrieving product " +
+                    "matching product " +
+                    "code: " + prodCode);
+            throw e;
+        }
+    }
+
+    private static void getProductsByKeyword() throws SQLException {
+        System.out.print("Please enter keyword: ");
+        String keyword = input.nextLine();
+
+        try {
+            List<Product> products = productService.getProductsByKeyword(keyword);
+            System.out.println("-------------------------------");
+            if(products.isEmpty()){
+                System.out.println("No products found for keyword \"" + keyword + "\".");
+            }else {
                 System.out.println("Products containing keyword: " + keyword);
                 for (Product p : products) {
                     System.out.println(p.getProductCode() + ": " + p.getProductName());
                 }
-                System.out.println("-------------------------------");
-            }catch(SQLException e) {
-                System.out.println("A database error occurred. Cannot retrieve products for specified keyword: " + keyword);
-                throw e;
             }
-
-            String prodCode = "S10_1678";
-            try {
-                Product p = productService.getProductByCode(prodCode);
-                if (p != null) {
-                    System.out.println("Product matching " + prodCode + ": " + p.getProductName());
-                } else {
-                    System.out.println("No product found matching " + prodCode);
-                }
-            }catch(SQLException e) {
-                System.out.println("Cannot carry out product retrieval. An error occurred when retrieving product " +
-                        "matching product " +
-                        "code: " + prodCode);
-                throw e;
-            }
-
-            prodCode = "S10_1010";
-            try {
-                Product p = productService.getProductByCode(prodCode);
-                if (p != null) {
-                    System.out.println("Product matching " + prodCode + ": " + p.getProductName());
-                } else {
-                    System.out.println("No product found matching " + prodCode);
-                }
-            }catch(SQLException e) {
-                System.out.println("Cannot carry out product retrieval. An error occurred when retrieving product " +
-                        "matching product " +
-                                "code: " + prodCode);
-                throw e;
-            }
-
-            keyword = "the";
-            List<Product> deleted = productService.deleteProductsByKeyword(keyword);
-            System.out.println("Deleted products: " + deleted);
-            //mySqlConnector.freeConnection();
-        }catch(SQLException e){
-            log.error("Database exception occurred. \nException: {}", e.getMessage());
+            System.out.println("-------------------------------");
+        }catch(SQLException e) {
+            System.out.println("A database error occurred. Cannot retrieve products for specified keyword: " + keyword);
+            throw e;
         }
     }
 }
